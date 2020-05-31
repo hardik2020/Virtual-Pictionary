@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',() => {
+            // Connect to websocket
+            var socket = io();
+
+            socket.on('connect',room_name => {
+                socket.emit('submit',{'guess':'Connected'},room=room_name);
+                document.querySelector("#guess").onclick = () => {
+                    val = document.querySelector("#msg").value;
+                    socket.emit('submit',{'guess':val},room=room_name);
+                };
+            });
+            socket.on('announce',guess => {
+                const li = document.createElement('li');
+                li.innerHTML=`${guess.guess}`;
+                document.querySelector('#guesses').append(li);
+                document.querySelector('#msg').value = '';
+            });
+
+        });
+    </script>
+    <title>Title</title>
+</head>
+<body>
+<ul id="guesses"></ul>
+<input type="text" id="msg">
+<button id="guess">Guess</button>
+
+</body>
+</html>

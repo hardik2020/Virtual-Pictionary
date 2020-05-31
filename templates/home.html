@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+
+            var socket = io();
+
+            socket.on('connect',() => {
+
+                document.querySelector('form').onsubmit = () => {
+
+                    room_name = document.querySelector("#room_name").value;
+
+                };
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+
+<form method="post">
+            <label>Enter room name</label>
+            <p><input type="text" name="room_name" id="room_name" required>
+            <p><input type='submit' value='Join room'>
+</form>
+
+</body>
+</html>
