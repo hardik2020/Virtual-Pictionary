@@ -26,3 +26,9 @@ def submit(data,room):
 
     join_room(session['room_name'])
     emit('announce',{'guess':guess},room=session['room_name'])
+
+@socketio.on('draw_submit')
+def draw_submit(data):
+    print('here',data['state'])
+    #join_room(session['room_name'])
+    emit('draw_announce',{'coord0':data['coord0'],'coord1':data['coord1'],'state':data['state'],'color':data['color'],'thickness':data['thickness']},room=session['room_name'])
