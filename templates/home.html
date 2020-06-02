@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {{ JSGlue.include() }}
     <meta charset="UTF-8">
     <title>Home Page</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
@@ -10,11 +11,35 @@
             var socket = io();
 
             socket.on('connect',() => {
-
-                document.querySelector('form').onsubmit = () => {
-
-                    room_name = document.querySelector("#room_name").value;
-
+                document.querySelector('#create').onclick= ()=>{
+                    var val = "";
+                    val=document.querySelector('#user_name').value;
+                    if(val==="")
+                    {
+                        val="xyzxyz";
+                    }
+                    location.href = Flask.url_for('create', {'user_name':val});
+                };
+                let count=0;
+                document.querySelector('#join').onclick= ()=>{
+                    document.querySelector('#room_name').style.display='block';
+                    count++;
+                    if(count>1)
+                    {
+                        var val1 = "";
+                        val1=document.querySelector('#user_name').value;
+                        if(val1==="")
+                        {
+                            val1="xyzxyz";
+                        }
+                        var val2 = "";
+                        val2=document.querySelector('#room_name').value;
+                        if(val2==="")
+                        {
+                            val2="xyzxyz";
+                        }
+                        location.href = Flask.url_for('join', {'user_name':val1,'room_name':val2});
+                    }
                 };
             });
 
@@ -24,11 +49,12 @@
 </head>
 <body>
 
-<form method="post">
-            <label>Enter room name</label>
-            <p><input type="text" name="room_name" id="room_name" required>
-            <p><input type='submit' value='Join room'>
-</form>
+
+            <label>Enter your name</label>
+            <p><input type="text" name="user_name" id="user_name" required></p>
+            <p><button id="create">Create</button></p>
+            <p> <button id="join">Join</button></p>
+            <p ><input type="text" name="room_name" id="room_name" required style="display:none;" placeholder="Enter room code"></p>
 
 </body>
 </html>
