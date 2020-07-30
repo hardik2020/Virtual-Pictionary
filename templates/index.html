@@ -66,7 +66,7 @@
             });
             socket.on('announce',guess => {
                 const li = document.createElement('li');
-                if(`${guess.guess}`!= `${guess.user}`+' Connected')
+                if(String(`${guess.guess}`).search('Connected')==-1)
                     li.innerHTML=`${guess.user}`+' guessed '+`${guess.guess}`;
                 else
                     li.innerHTML=`${guess.guess}`;
@@ -87,6 +87,10 @@
                 console.log(state);
 
                 draw_point(coord0, coord1, state,color,thickness);
+
+               });
+               socket.on('clear_announce',() => {
+                clear_screen();
 
                });
 
@@ -149,16 +153,19 @@ function render(){
           });
 
           document.querySelector('#erase').onclick = () => {
-              for (let i = 0; i < points.length; i++)
+                socket.emit('clear_submit');
+          };
+    };
+
+      function clear_screen()
+      {
+        for (let i = 0; i < points.length; i++)
                   points[i].remove();
               for (let i = 0; i < lines.length; i++)
                   lines[i].remove();
               points = [];
               lines = [];
-          };
-    };
-
-
+      };
       function draw_point(x, y, connect,color,thickness) {
         svg = d3.select('#draw')
                   .attr('height', window.innerHeight)

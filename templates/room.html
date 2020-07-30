@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ JSGlue.include() }}
+    <meta charset="UTF-8">
+    <title>Room</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            function post(path, params, method='post') {
+              const form = document.createElement('form');
+              form.method = method;
+              form.action = path;
+
+              for (const key in params) {
+                if (params.hasOwnProperty(key)) {
+                  const hiddenField = document.createElement('input');
+                  hiddenField.type = 'hidden';
+                  hiddenField.name = key;
+                  hiddenField.value = params[key];
+
+                  form.appendChild(hiddenField);
+                }
+              }
+
+              document.body.appendChild(form);
+              form.submit();
+            }
+
+            var socket = io();
+            let save_room = '';
+            let save_user = '';
+
+            socket.on('connect',() => {
+
+                var room_name = '{{ room_name }}';
+                var user_name = '{{ user_name }}';
+                save_room = room_name
+                save_user = user_name
+                console.log(user_name);
+                var admin = '{{ admins }}'
+                console.log(admin);
+                if(user_name === admin)
+                {
+                    document.querySelector('button').disabled=false;
+                }
+                else
+                {
+                    document.querySelector('button').disabled=true;
+                }
+                socket.emit('room_joined',{'user_name':user_name},room=room_name);
+                document.querySelector('button').onclick= ()=>{
+                    socket.emit('submit_start_game',{'user_name':user_name,'room_name':room_name},room=room_name);
+
+                };
+            });
+
+            socket.on('announce_joined',guess => {
+
+                const myNode = document.querySelector('ul');
+                 while ( myNode.firstChild) {
+                    myNode.removeChild(myNode.lastChild);
+                 }
+                 var users= `${guess.rooms}` ;
+                 var user_name= `${guess.user_name}` ;
+                 users=users.split(',');
+                 console.log(users);
+                for(var i=0;i<users.length;i++)
+                {
+                    const li = document.createElement('li');
+                    li.innerHTML=users[i];
+                    document.querySelector('#users').append(li);
+                }
+
+            });
+
+            socket.on('start_game',data=>{
+                var room_name= `${data.room_name}` ;
+                var user_name= `${data.user_name}` ;
+                post(Flask.url_for('index'),{'room_name':save_room,'user_name':save_user});
+
+            });
+
+        });
+    </script>
+</head>
+<body>
+<label>Enter number of rounds</label><br>
+<input type="number"><br><br><br><br>
+<label>Enter time interval in seconds </label><br>
+<input type="number"><br><br><br><br>
+<button>Start Game</button>
+
+{{ room_name }}<br>
+<ul id="users"></ul>
+
+</body>
+</html>
