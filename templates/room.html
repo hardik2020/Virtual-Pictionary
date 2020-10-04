@@ -47,6 +47,8 @@
                 else
                 {
                     document.querySelector('button').disabled=true;
+                    document.getElementById('rounds').disabled=true;
+                    document.getElementById('seconds').disabled=true;
                 }
                 socket.emit('room_joined',{'user_name':user_name},room=room_name);
                 document.querySelector('button').onclick= ()=>{
@@ -86,9 +88,9 @@
 </head>
 <body>
 <label>Enter number of rounds</label><br>
-<input type="number"><br><br><br><br>
+<input type="number" id="rounds"><br><br><br><br>
 <label>Enter time interval in seconds </label><br>
-<input type="number"><br><br><br><br>
+<input type="number" id="seconds"><br><br><br><br>
 <button>Start Game</button>
 
 {{ room_name }}<br>
