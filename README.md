@@ -1,2 +1,2 @@
-# Skribbl-Online-Gaming-App
+# Virtual-Pictionary
 Lets Skribbl
